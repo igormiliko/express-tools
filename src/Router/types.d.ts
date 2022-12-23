@@ -1,3 +1,5 @@
+import { Error_tool } from "../Error/Error.tool";
+
 export type IHTTP_methods_config = (CR: IRouteConfig) => {
   get: Router;
   put: Router;
@@ -11,5 +13,8 @@ export interface IRouteConfig {
   Route_name: string;
   MethodName: TMETHODs_http;
   Middlewares: TMiddlewareFunction[];
-  Controller: TMiddlewareFunction;
+  Controller: {
+    run: TMiddlewareFunction
+    errorHandler: Error_tool;
+}
 }

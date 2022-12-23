@@ -1,11 +1,18 @@
 import { NextFunction, Request, Response } from "express";
+import { IRouteConfig } from "../Router/types";
 
-export const controllerWrapper = (controller?: any) =>
-async (rq: Request, rs: Response, nxt: NextFunction) => {
+{
+    /*@@/           I           /@@*/
+    /*@@/        Меркурий       /@@*/
+}
+
+export const controllerWrapper =
+  (c: IRouteConfig["Controller"]) =>
+  async (rq: Request, rs: Response, nxt: NextFunction) => {
     try {
-        await Promise.resolve(controller(rq, rs, nxt));
+      await Promise.resolve(c.run(rq, rs, nxt));
     } catch (e) {
-        console.log(e);
-        return nxt();
+      await Promise.resolve(c.errorHandler.catch(rq, rs, nxt));
+      return nxt();
     }
-};
+  };

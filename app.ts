@@ -1,9 +1,12 @@
 import express from "express";
-import RouterTool from "./src/Router/Router.tool";
-
+import appConfig from "./src/Config/app.config";
+{
+    /*@@/          101           /@@*/
+}
 const app = express();
 
-RouterTool(app)
+appConfig(app)
 
 const port = process.env.PORT || 3333;
+
 app.listen(port, () => console.log("🥏Deep running in ", port, "⚠️👷🏻🛠️"));
