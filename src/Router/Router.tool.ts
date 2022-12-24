@@ -1,7 +1,7 @@
 
 import { Router, Express } from "express";
 import { controllerWrapper } from "../Controller/ControllerWraper.tools";
-import RouteConfig from "./RouteConfig";
+import RoutersConfig from "../Config/Router/router.config";
 import { IHTTP_methods_config, IRouteConfig } from "./types";
 
 const ROUTER = Router();
@@ -19,5 +19,5 @@ const HTTp_methods: IHTTP_methods_config = (CR: IRouteConfig) => ({
 
 // Configuring Routes
 export default (app: Express) =>
-  RouteConfig.forEach((CR) =>
+RoutersConfig.forEach((CR) =>
     app.use(HTTp_methods(CR)[CR.MethodName as keyof IHTTP_methods_config]))

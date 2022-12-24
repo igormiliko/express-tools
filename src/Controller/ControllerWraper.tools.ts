@@ -7,7 +7,7 @@ import { IRouteConfig } from "../Router/types";
     /*@@/        Меркурий       /@@*/
 }
 
-const nextWrapper = (objc: TResponse_from, nxt: NextFunction) => nxt(objc);
+export const nextWrapper = (objc: TResponse_from, nxt: NextFunction) => nxt(objc);
 
 export const controllerWrapper =
   (c: IRouteConfig["Controller"]) =>

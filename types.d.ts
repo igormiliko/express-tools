@@ -11,7 +11,7 @@ export interface TMetadata {
 } 
 
 export interface TResponse_from {
-    status: number;
-    message: string;
-    data: any;
+    status?: number;
+    message?: string;
+    data?: any;
 }
