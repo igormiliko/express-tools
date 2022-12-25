@@ -14,7 +14,7 @@ export interface IRouteConfig {
   MethodName: TMETHODs_http;
   Middlewares: TMiddlewareFunction[];
   Controller: {
-    run: TMiddlewareFunction
+    run: (rq: Request, rs: Response, nx: NextFunction) =>Promise<void>
     errorHandler: Error_tool;
 }
 }

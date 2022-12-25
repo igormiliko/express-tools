@@ -3,10 +3,7 @@ import express, {Express} from 'express'
 import cors from "cors";
 import helmet from "helmet";
 import nocache from "nocache";
-{
-    /*@@/           I            /@@*/
-    /*@@/     APP middlewares    /@@*/
-}
+import TransformResponseTool from "../Util/TransformResponse.tool";
 
 class APP_config {
     constructor(app: Express) {
@@ -16,6 +13,7 @@ class APP_config {
         app.use(helmet())
         app.use(nocache())
         RouterTool(app)
+        app.use(TransformResponseTool)
     }
 }
 

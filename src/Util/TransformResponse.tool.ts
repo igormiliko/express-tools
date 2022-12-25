@@ -18,5 +18,5 @@ export default async (
         data: resFrom.data
     }
 
-    return res.status(sender.status).json(sender);
+    return res.status(sender.status || 666).json(sender);
 };

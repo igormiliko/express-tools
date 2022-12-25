@@ -11,6 +11,7 @@ class Auth {
 
     Auth.Role = new Role(RoleDomain,nxt);
     res.locals = Auth.Role;
+    nxt()
   }
 }
 
