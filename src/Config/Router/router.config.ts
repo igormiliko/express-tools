@@ -1,13 +1,13 @@
 import { Response, Request, NextFunction } from "express";
-import { IRouteConfig } from "../../Router/types";
+import { IMiddlewaresParams, IRouteConfig } from "../../Router/types";
 import auth from "./auth.router";
 import permission from "./permission.router";
 import role from "./role.router";
 import user from "./user.router";
 
 export const defaultController =
-  async (_req: Request, _res: Response, nxt: NextFunction) =>
-    _res.send("Building ⚠️");
+  async ({req, res, nxt}: IMiddlewaresParams) =>
+    res.send("Building ⚠️");
 
 export default [
   {

@@ -7,14 +7,24 @@ export type IHTTP_methods_config = (CR: IRouteConfig) => {
   post: Router;
   delete: Router;
 };
-export type TMiddlewareFunction = (rq: Request, rs: Response, nx: NextFunction) => NextFunction | null
+export type TMiddlewareFunction = ({
+  req,
+  res,
+  nxt,
+}: IMiddlewaresParams) => NextFunction | null;
 
 export interface IRouteConfig {
   Route_name: string;
   MethodName: TMETHODs_http;
   Middlewares: TMiddlewareFunction[];
   Controller: {
-    run: (rq: Request, rs: Response, nx: NextFunction) =>Promise<void>
+    run: ({ req, res, nxt }: IMiddlewaresParams) => Promise<void>;
     errorHandler: Error_tool;
+  };
 }
+
+export interface IMiddlewaresParams {
+  req: Request;
+  res: Response;
+  nxt: NextFunction;
 }

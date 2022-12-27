@@ -1,4 +1,5 @@
 import {controller} from "../../Controller/auth.controller";
+import authValidator from "../../Middlewares/Validators/auth.validator";
 import auth from "../../Services/Authentication/Auth/Auth.tools";
 import { defaultController } from "./router.config";
 
@@ -36,7 +37,7 @@ export default [
       {
         Route_name: "/register",
         MethodName: "put",
-        Middlewares: [],
+        Middlewares: [authValidator.register],
         Controller: { run: controller.register, errorHandler: null },
       },
       {
