@@ -6,7 +6,6 @@ import { nextWrapper } from "../../Controller/ControllerWraper.tools";
 class AuthValidator {
   async register(req: Request, res: Response, nxt: NextFunction) {
     try {
-      console.log("HII");
       const schema = Yup.object().shape({
         name: Yup.string().max(128).required(),
         email: Yup.string().email().required(),
