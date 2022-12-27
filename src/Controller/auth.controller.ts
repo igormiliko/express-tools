@@ -5,8 +5,9 @@ import { IMiddlewaresParams, TMiddlewareFunction } from "../Router/types";
 import Cyphers from "../Services/Authentication/Security/cypher";
 import { nextWrapper } from "./ControllerWraper.tools";
 // Don't need put try/catch, just nextWrapper
-class AuthController {
 
+
+class AuthController {
   async authenticate({ req, res, nxt }: IMiddlewaresParams) {}
   async register({ req, res, nxt }: IMiddlewaresParams) {
     let data: any = {
