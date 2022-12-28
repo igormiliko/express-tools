@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import messagesConfig from "../../../Config/messages.config";
-import { nextWrapper } from "../../../Controller/ControllerWraper.tools";
 import Cyphers from "./cypher";
 
 export type ISecurity_action<T> = (
@@ -22,10 +21,10 @@ export class Security extends Cyphers {
   public static authenticate: ISecurity_action<string> = async (req, _ , nxt) => {
     const roleName = await this.decrypt(req?.headers.authorization || "")
     if(!roleName) {
-        nextWrapper({
+        nxt({
             status: 401,
             message: messagesConfig.UNAUTHENTICATE
-        },nxt)
+        })
     }
     return roleName
   };

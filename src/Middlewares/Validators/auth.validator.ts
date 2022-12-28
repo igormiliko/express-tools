@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import * as Yup from "yup";
 import messagesConfig from "../../Config/messages.config";
-import { nextWrapper } from "../../Controller/ControllerWraper.tools";
 
 class AuthValidator {
   async register(req: Request, res: Response, nxt: NextFunction) {
@@ -34,25 +33,20 @@ class AuthValidator {
 
       nxt();
     } catch (error: any) {
-      console.log(error);
-      if(error instanceof Yup.ValidationError) {
-        nextWrapper(
-          {
-            data: {},
-            message: error.errors.join(", "),
-            status: 400,
-          },
-          nxt
-        );
-      }
-      nextWrapper(
-        {
+      // console.log(error);
+      if (error instanceof Yup.ValidationError) {
+        nxt({
           data: {},
-          message: messagesConfig.ERROR_AT_SERVER,
-          status: 500,
-        },
-        nxt
-      )
+          message: error.errors.join(", "),
+          status: 400,
+        });
+      }
+      
+      nxt({
+        data: {},
+        message: messagesConfig.ERROR_AT_SERVER,
+        status: 500,
+      });
     }
   }
 }

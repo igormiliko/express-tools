@@ -2,30 +2,44 @@ import messagesConfig from "../Config/messages.config";
 import prisma_client from "../Databases/prisma/Prisma.client";
 import { IMiddlewaresParams } from "../Router/types";
 import Cyphers from "../Services/Authentication/Security/cypher";
-import { nextWrapper } from "./ControllerWraper.tools";
+import { Request } from "express";
+import { HTTPErrors } from "../Services/http/HTTPerrors.tools";
+import { User } from "../Model/user.model";
+import { HTTPsuccess } from "../Services/http/HTTPsucecss.tool";
+import { JWT } from "../Services/JWT/JWT.tools";
 // Don't need put try/catch, just nextWrapper
 
 class AuthController {
-  async authenticate({ req, res, nxt }: IMiddlewaresParams) {}
+  protected static getpassword = async (req: Request) =>
+    await Cyphers.encryptSHA256(req.headers.authorization);
+
+  async authenticate({ req, res, nxt }: IMiddlewaresParams) {
+    const user = await User.findFirst(
+      req,
+      await AuthController.getpassword(req)
+    );
+
+    JWT.sign(user, res)
+
+    HTTPErrors.call_404(nxt, user, messagesConfig.LOGIN_FAIL);
+    HTTPsuccess.call_201(nxt , messagesConfig.LOGIN_SUCCESS)
+  }
 
   async register({ req, res, nxt }: IMiddlewaresParams) {
     let data: any = {
       ...req.body,
-      password: await Cyphers.encrypt(req.body.password),
+      password: await AuthController.getpassword(req),
     };
 
     await prisma_client.user.create({
       data: data,
     });
 
-    return nextWrapper(
-      {
-        status: 201,
-        message: messagesConfig.AUTH_REGISTER_SUCCESS,
-        data: {},
-      },
-      nxt
-    );
+    return nxt({
+      status: 201,
+      message: messagesConfig.AUTH_REGISTER_SUCCESS,
+      data: {},
+    });
   }
 }
 const controller = new AuthController();

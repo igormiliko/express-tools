@@ -1,5 +1,8 @@
+require('dotenv').config()
+// console.log(process.env.JWT_SECRET)
 import express from "express";
 import appConfig from "./src/Config/app.config";
+require('dotenv').config()
 {
     /*@@/          0101          /@@*/
 }
