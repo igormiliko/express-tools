@@ -1,13 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import { Role } from "../Roles/role";
-import { Security } from "../Security/security";
 
 class Auth {
   static Role: Role;
   async aplly(req: Request, res: Response, nxt: NextFunction) {
-    const RoleDomain = await Promise.resolve(
-      Security.authenticate(req, res, nxt)
-    );
+    const RoleDomain = res.locals.user
 
     Auth.Role = new Role(RoleDomain,nxt);
     res.locals = Auth.Role;

@@ -32,7 +32,7 @@ export default [
         Route_name: "/login",
         MethodName: "put",
         Middlewares: [auth],
-        Controller: { run: controller.authenticate, errorHandler: null },
+        Controller: { run: controller.login, errorHandler: null },
       },
       {
         Route_name: "/register",

@@ -23,7 +23,7 @@ class JWTtool extends Cyphers {
       },
       await this.key()
     );
-    return res.append("twj-2023", token);
+    return res.append("authorization", token);
   }
 }
 
