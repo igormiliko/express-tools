@@ -19,13 +19,13 @@ export class Security extends Cyphers {
   });
   
   public static authenticate: ISecurity_action<string> = async (req, _ , nxt) => {
-    const roleName = await this.decrypt(req?.headers.authorization || "")
-    if(!roleName) {
-        nxt({
-            status: 401,
-            message: messagesConfig.UNAUTHENTICATE
-        })
-    }
-    return roleName
+    // const roleName = await this.decryptIV({iv:"", encrypted: ""})
+    // if(!roleName) {
+    //     nxt({
+    //         status: 401,
+    //         message: messagesConfig.UNAUTHENTICATE
+    //     })
+    // }
+    return 'sasds'
   };
 }

@@ -1,16 +1,27 @@
-import * as dotenv from 'dotenv';
-dotenv.config();
 import * as jsonwebtoken from "jsonwebtoken";
 import { Response } from "express";
-import Cyphers from '../Authentication/Security/cypher';
-// console.log(process.env.JWT_SECRET);
-class JWTtool {
-  sign(data: any, res: Response) {
-    let simetricKey = Cyphers.encrypt(data) 
+import Cyphers from "../Authentication/Security/cypher";
+class JWTtool extends Cyphers {
+  constructor() {
+    super()
+  }
+
+  private JWT_CONFIG = {
+    iat: Math.floor(Date.now()),
+    exp: Date.now() + 1000 * 60 * 60 * 24 * 2,
+  };
+  
+  private key = async () => await Cyphers.encryptSHA256(process.env.JWT_SECRET!);
+  
+  async sign(dataToEncrypt: string, res: Response) {
+    const data = await Cyphers.encryptIV(dataToEncrypt)
+
     let token = jsonwebtoken.sign(
-      { data, iat: Math.floor(Date.now() / 1000) - 30 },
-      "BALALIKATODO" ,
-      { algorithm: "PS256" }
+      {
+        data,
+        ...this.JWT_CONFIG
+      },
+      await this.key()
     );
     return res.append("twj-2023", token);
   }

@@ -10,8 +10,15 @@ import { JWT } from "../Services/JWT/JWT.tools";
 // Don't need put try/catch, just nextWrapper
 
 class AuthController {
-  protected static getpassword = async (req: Request) =>
-    await Cyphers.encryptSHA256(req.headers.authorization);
+  protected static getpassword = async (req: Request) =>{
+    return new Promise<string>(async (res,rej) => {
+      try {
+        return res(await Cyphers.encryptSHA256(req.headers.authorization!));
+      } catch (error) {
+        return rej(error)
+      }
+    })
+  }
 
   async authenticate({ req, res, nxt }: IMiddlewaresParams) {
     const user = await User.findFirst(
@@ -19,7 +26,7 @@ class AuthController {
       await AuthController.getpassword(req)
     );
 
-    JWT.sign(user, res)
+    await JWT.sign(JSON.stringify(user), res)
 
     HTTPErrors.call_404(nxt, user, messagesConfig.LOGIN_FAIL);
     HTTPsuccess.call_201(nxt , messagesConfig.LOGIN_SUCCESS)
