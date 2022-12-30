@@ -1,10 +1,14 @@
 import { NextFunction } from "express";
+import messagesConfig from "../../Config/messages.config";
 export class HTTPErrors {
     static call_400() {
         throw new Error("HTTP ERRO 400 NOT IMPLEMENTED!")
     }
-    static call_401() {
-        throw new Error("HTTP ERRO 401 NOT IMPLEMENTED!")
+    static call_401(nxt: NextFunction) {
+        return nxt({
+            status: 401,
+            message: messagesConfig.UNAUTHENTICATE,
+          });
     }
     static call_402() {
         throw new Error("HTTP ERRO 402 NOT IMPLEMENTED!")

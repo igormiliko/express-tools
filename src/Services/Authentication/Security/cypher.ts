@@ -8,13 +8,13 @@ export default class Cyphers {
     digest: BinaryToTextEncoding,
     options?: Crypto.HashOptions
   ) {
-    return new Promise<string>((res, rej) => {
+    return new Promise<string>((res, reject) => {
       try {
         return res(
           Crypto.createHash(algo, options).update(data).digest(digest)
         );
       } catch (error) {
-        return rej(error);
+        return reject(error);
       }
     });
   }
@@ -38,7 +38,7 @@ export default class Cyphers {
   private static readonly iv = Crypto.randomBytes(16);
 
   static encryptIV(data: string): Promise<TEncryptIVObject> {
-    return new Promise(async (res, rej) => {
+    return new Promise(async (resolve, reject) => {
       try {
         const key = await Cyphers.key;
         const iv = Cyphers.iv;
@@ -48,19 +48,20 @@ export default class Cyphers {
 
         encrypted = Buffer.concat([encrypted, cipher.final()]);
 
-        return res({
+        return resolve({
           iv: iv.toString("hex"),
           encrypted: encrypted.toString("hex"),
         });
       } catch (error) {
-        rej(error);
+        reject(error);
       }
     });
   }
 
   protected static decryptIV(data: TJwt) {
-    return new Promise<string>(async (res, rej) => {
-      try {        
+    return new Promise<string>(async (reoslve, reject) => {
+      try {
+        console.log("????", data)
         let encryptedText = Buffer.from(data.encrypted, "hex");
         
         let decipher = Crypto.createDecipheriv(
@@ -72,14 +73,25 @@ export default class Cyphers {
         let decrypted = decipher.update(encryptedText);
         decrypted = Buffer.concat([decrypted, decipher.final()]);
 
-          res({
-            ...JSON.parse(decrypted.toString()),
+        reoslve(decrypted.toString())
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
+  protected static decryptJWT_IV(data: TJwt) {
+    return new Promise<string>(async (reoslve, reject) => {
+      try {        
+        const JWT = await Cyphers.decryptJWT_IV(data)
+
+          reoslve({
+            ...JSON.parse(JWT),
             iat: data.iat,
             exp: data.exp
           })
-
       } catch (error) {
-        rej(error);
+        reject(error);
       }
     });
   }

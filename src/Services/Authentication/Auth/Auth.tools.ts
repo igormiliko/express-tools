@@ -1,9 +1,10 @@
 import { NextFunction, Request, Response } from "express";
+import { IMiddlewaresParams } from "../../../Router/types";
 import { Role } from "../Roles/role";
 
 class Auth {
   static Role: Role;
-  async aplly(req: Request, res: Response, nxt: NextFunction) {
+  async aplly({req, res, nxt}: IMiddlewaresParams) {
     const RoleDomain = res.locals.user
 
     Auth.Role = new Role(RoleDomain,nxt);
@@ -12,6 +13,6 @@ class Auth {
   } 
 }
 
-const auth = (_0: Request, _1: Response, _3: NextFunction) =>
-  new Auth().aplly(_0, _1, _3);
+const auth = (req: Request, res: Response, nxt: NextFunction) =>
+  new Auth().aplly({req, res, nxt});
 export default auth;

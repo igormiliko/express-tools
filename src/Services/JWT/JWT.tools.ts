@@ -14,16 +14,35 @@ class JWTtool extends Cyphers {
   private key = async () => await Cyphers.encryptSHA256(process.env.JWT_SECRET!);
   
   async sign(dataToEncrypt: string, res: Response) {
-    const data = await Cyphers.encryptIV(dataToEncrypt)
+    return new Promise<void>(async (resolve, reject) => {
+      try {
+        const data = await Cyphers.encryptIV(dataToEncrypt)
+    
+        let token = jsonwebtoken.sign(
+          {
+            data,
+            ...this.JWT_CONFIG
+          },
+          await this.key()
+        );
+        res.append("authorization", token);
+        return resolve()
+      } catch (error) {
+        return reject(error)
+      }
+    })
+  }
 
-    let token = jsonwebtoken.sign(
-      {
-        data,
-        ...this.JWT_CONFIG
-      },
-      await this.key()
-    );
-    return res.append("authorization", token);
+  async verify(token: string, res: Response) {
+    return new Promise<string | jsonwebtoken.JwtPayload>(async (resolve, reject) => {
+      try {
+        const isTrustedJWT = jsonwebtoken.verify(token, await this.key())
+        res.locals.userJWT = token
+        resolve(isTrustedJWT)
+      } catch (error) {
+        reject(error)
+      }
+    })
   }
 }
 
