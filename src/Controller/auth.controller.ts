@@ -10,7 +10,7 @@ import { Security } from "../Services/Authentication/Security/security";
 
 class AuthController extends Security {
   async login({ req, res, nxt }: IMiddlewaresParams) {
-    const user = await User.findFirst(
+    const user = await User.loginVerify(
       req,
       await Security.getpassword(req)
     );
@@ -32,6 +32,5 @@ class AuthController extends Security {
     HTTPsuccess.call_201(nxt, messagesConfig.AUTH_REGISTER_SUCCESS)
   }
 }
-const controller = new AuthController();
-export { controller };
-export default () => "Controllers don't have default export";
+const authController = new AuthController();
+export { authController };

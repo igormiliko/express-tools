@@ -9,7 +9,7 @@ class Auth {
     Auth.Role = new Role(RoleDomain,nxt);
     res.locals = Auth.Role;
     nxt()
-  }
+  } 
 }
 
 const auth = (_0: Request, _1: Response, _3: NextFunction) =>
