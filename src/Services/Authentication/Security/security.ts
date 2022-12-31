@@ -1,5 +1,6 @@
 import { Request } from "express";
 import { HTTPErrors } from "../../http/HTTPerrors.tools";
+import { JWT, TJWT_application } from "../../JWT/JWT.tools";
 import Cyphers from "./cypher";
 import { ISecurity_action } from "./types";
 
@@ -23,30 +24,23 @@ export class Security extends Cyphers {
       return authorization;
     });
 
-  public static verifyToken: ISecurity_action<string | null> = async (req, res, nxt) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        let userJWT = null;
-
-        if (req.headers.authorization) {
-          userJWT = await this.decryptJWT_IV(JSON.parse(req.headers.authorization));
-        }
-        if (!userJWT) {
-          HTTPErrors.call_401(nxt);
-        }
-        resolve(userJWT);
-      } catch (error) {
-        reject(error);
-      }
-    });
-  };
-
   public static authenticate: ISecurity_action<void> = (req, res, nxt) => {
     return new Promise(async (resolve, reject) => {
       try {
-        const JWT = await Security.verifyToken(req, res, nxt)
+        const token = req.headers.authorization
+
+        if (!token) {
+          HTTPErrors.call_401(nxt);
+        }
+        const decodeToken = await JWT.decode(token!, nxt)
+
+        if(JWT.isExpired(decodeToken)) {
+          HTTPErrors.call_401(nxt);
+        }
+
+       const userRequested = await Cyphers.decryptJWT_IV(decodeToken)
+       res.locals.userSession = userRequested 
         
-        console.log()
         resolve()
       } catch (error) {
         reject(error)

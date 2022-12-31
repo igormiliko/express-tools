@@ -1,5 +1,6 @@
 import Crypto, { BinaryToTextEncoding } from "crypto";
-import { TEncryptIVObject, TJwt } from "./types";
+import { TJWT_application } from "../../JWT/JWT.tools";
+import { TEncryptIVObject } from "./types";
 
 export default class Cyphers {
   private static hashBy(
@@ -58,10 +59,9 @@ export default class Cyphers {
     });
   }
 
-  protected static decryptIV(data: TJwt) {
+  protected static decryptIV(data: TJWT_application["data"]) {
     return new Promise<string>(async (reoslve, reject) => {
       try {
-        console.log("????", data)
         let encryptedText = Buffer.from(data.encrypted, "hex");
         
         let decipher = Crypto.createDecipheriv(
@@ -80,16 +80,14 @@ export default class Cyphers {
     });
   }
 
-  protected static decryptJWT_IV(data: TJwt) {
+  protected static decryptJWT_IV(token: TJWT_application) {
     return new Promise<string>(async (reoslve, reject) => {
       try {        
-        const JWT = await Cyphers.decryptJWT_IV(data)
+        const JWT = await Cyphers.decryptIV(token.data)
 
-          reoslve({
-            ...JSON.parse(JWT),
-            iat: data.iat,
-            exp: data.exp
-          })
+        reoslve({
+          ...JSON.parse(JWT)
+        })
       } catch (error) {
         reject(error);
       }

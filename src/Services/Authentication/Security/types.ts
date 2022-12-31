@@ -5,13 +5,6 @@ export type TEncryptIVObject = {
   encrypted: string;
 };
 
-export type TJwt = {
-  iv: string;
-  encrypted: string;
-  iat: number;
-  exp: number;
-};
-
 export type ISecurity_action<T> = (
   req: Request,
   res: Response,

@@ -19,7 +19,7 @@ export default [
       {
         Route_name: "/login",
         MethodName: "put",
-        Middlewares: [auth],
+        Middlewares: [],
         Controller: { run: authController.login, errorHandler: null },
       },
       {
